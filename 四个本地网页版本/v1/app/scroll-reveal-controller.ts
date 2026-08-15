@@ -44,10 +44,22 @@ export function activateScrollReveal(
     root.classList.remove("reveal-ready");
     elements.forEach((element) => element.classList.add("is-revealed"));
   };
-  const reducedMotion =
-    options.reducedMotion ??
-    (typeof window !== "undefined" &&
-      window.matchMedia(REDUCED_MOTION_QUERY).matches);
+  let reducedMotion = options.reducedMotion;
+  if (reducedMotion === undefined) {
+    if (typeof window === "undefined") {
+      reducedMotion = false;
+    } else if (typeof window.matchMedia !== "function") {
+      revealAll();
+      return () => {};
+    } else {
+      try {
+        reducedMotion = window.matchMedia(REDUCED_MOTION_QUERY).matches;
+      } catch {
+        revealAll();
+        return () => {};
+      }
+    }
+  }
   const observerFactory =
     options.observerFactory === undefined
       ? getDefaultObserverFactory()
@@ -58,12 +70,12 @@ export function activateScrollReveal(
     return () => {};
   }
 
-  let observer: RevealObserver;
+  let observer: RevealObserver | undefined;
   const onIntersect = (entries: readonly RevealEntry[]) => {
     entries.forEach((entry) => {
       if (!entry.isIntersecting) return;
       entry.target.classList.add("is-revealed");
-      observer.unobserve(entry.target);
+      observer?.unobserve(entry.target);
     });
   };
 
@@ -76,12 +88,13 @@ export function activateScrollReveal(
     elements.forEach((element) => observer.observe(element));
     root.classList.add("reveal-ready");
   } catch {
+    observer?.disconnect();
     revealAll();
     return () => {};
   }
 
   return () => {
-    observer.disconnect();
+    observer?.disconnect();
     root.classList.remove("reveal-ready");
   };
 }
