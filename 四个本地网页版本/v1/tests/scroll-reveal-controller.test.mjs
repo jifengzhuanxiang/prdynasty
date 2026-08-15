@@ -1,0 +1,148 @@
+import assert from "node:assert/strict";
+import test from "node:test";
+
+const controllerUrl = new URL(
+  "../app/scroll-reveal-controller.ts",
+  import.meta.url,
+);
+const { activateScrollReveal } = await import(controllerUrl.href);
+
+class FakeClassList {
+  values = new Set();
+
+  add(...tokens) {
+    tokens.forEach((token) => this.values.add(token));
+  }
+
+  remove(...tokens) {
+    tokens.forEach((token) => this.values.delete(token));
+  }
+
+  contains(token) {
+    return this.values.has(token);
+  }
+}
+
+function fakeElement() {
+  return { classList: new FakeClassList() };
+}
+
+function createObserverHarness() {
+  let callback;
+  const observed = [];
+  const unobserved = [];
+  let disconnected = false;
+
+  const factory = (nextCallback, options) => {
+    callback = nextCallback;
+    assert.deepEqual(options, {
+      root: null,
+      rootMargin: "0px 0px -12% 0px",
+      threshold: 0.12,
+    });
+    return {
+      observe(element) {
+        observed.push(element);
+      },
+      unobserve(element) {
+        unobserved.push(element);
+      },
+      disconnect() {
+        disconnected = true;
+      },
+    };
+  };
+
+  return {
+    factory,
+    observed,
+    unobserved,
+    emit(entries) {
+      assert.ok(callback);
+      callback(entries);
+    },
+    isDisconnected() {
+      return disconnected;
+    },
+  };
+}
+
+test("reveals an intersecting element once and unobserves it", () => {
+  const root = fakeElement();
+  const item = fakeElement();
+  const observer = createObserverHarness();
+
+  const cleanup = activateScrollReveal({
+    root,
+    elements: [item],
+    reducedMotion: false,
+    observerFactory: observer.factory,
+  });
+
+  assert.equal(root.classList.contains("reveal-ready"), true);
+  assert.deepEqual(observer.observed, [item]);
+  observer.emit([{ isIntersecting: false, target: item }]);
+  assert.equal(item.classList.contains("is-revealed"), false);
+
+  observer.emit([{ isIntersecting: true, target: item }]);
+  assert.equal(item.classList.contains("is-revealed"), true);
+  assert.deepEqual(observer.unobserved, [item]);
+
+  cleanup();
+  assert.equal(observer.isDisconnected(), true);
+  assert.equal(root.classList.contains("reveal-ready"), false);
+});
+
+test("shows all content without an observer for reduced motion", () => {
+  const root = fakeElement();
+  const items = [fakeElement(), fakeElement()];
+  let factoryCalled = false;
+
+  activateScrollReveal({
+    root,
+    elements: items,
+    reducedMotion: true,
+    observerFactory() {
+      factoryCalled = true;
+      throw new Error("observer must not be created");
+    },
+  });
+
+  assert.equal(factoryCalled, false);
+  assert.equal(root.classList.contains("reveal-ready"), false);
+  items.forEach((item) => {
+    assert.equal(item.classList.contains("is-revealed"), true);
+  });
+});
+
+test("shows all content when IntersectionObserver is unavailable", () => {
+  const root = fakeElement();
+  const item = fakeElement();
+
+  activateScrollReveal({
+    root,
+    elements: [item],
+    reducedMotion: false,
+    observerFactory: null,
+  });
+
+  assert.equal(root.classList.contains("reveal-ready"), false);
+  assert.equal(item.classList.contains("is-revealed"), true);
+});
+
+test("restores visible content when observer setup throws", () => {
+  const root = fakeElement();
+  const item = fakeElement();
+
+  activateScrollReveal({
+    root,
+    elements: [item],
+    reducedMotion: false,
+    observerFactory() {
+      throw new Error("observer setup failed");
+    },
+  });
+
+  assert.equal(root.classList.contains("reveal-ready"), false);
+  assert.equal(item.classList.contains("is-revealed"), true);
+});
