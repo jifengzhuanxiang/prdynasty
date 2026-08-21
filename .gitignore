@@ -1,21 +1,7 @@
-# Local workspace files that are not part of the published v1 source
+# Local workspace files
 .DS_Store
 .playwright-cli/
 .superpowers/
 .worktrees/
 docs/
 网页效果预览/
-
-# Other local variants and launcher helpers are intentionally kept out of this v1 branch
-四个本地网页版本/v2/
-四个本地网页版本/v3/
-四个本地网页版本/当前版本/
-四个本地网页版本/打开*/
-四个本地网页版本/启动*
-四个本地网页版本/README-使用说明.md
-四个本地网页版本/验证结果.md
-四个本地网页版本/tests/
-
-# v1-only local QA and preview artifacts
-四个本地网页版本/v1/.qa/
-四个本地网页版本/v1/.local-preview/

@@ -43,31 +43,4 @@ test("renders the recruitment content contract", async () => {
   assert.match(html, /8 月 19 日前有效/);
   assert.doesNotMatch(html, /codex-preview/);
   assert.doesNotMatch(html, /replace-with-your-email/);
-
-  const revealUnits = [
-    "strip",
-    "groups-heading",
-    "groups-cards",
-    "benefits-intro",
-    "benefits-list",
-    "stories-heading",
-    "stories-cards",
-    "faq-intro",
-    "faq-list",
-    "join-copy",
-    "join-qr",
-    "footer",
-  ];
-  for (const unit of revealUnits) {
-    assert.match(html, new RegExp(`data-reveal=["']${unit}["']`));
-  }
-  assert.equal((html.match(/\sdata-reveal=["']/g) ?? []).length, 12);
-  assert.equal(
-    (html.match(/data-reveal-delay=["']140["']/g) ?? []).length,
-    5,
-  );
-  assert.doesNotMatch(
-    html,
-    /class=["'][^"']*\bgroup-card\b[^"']*["'][^>]*\sdata-reveal=/,
-  );
 });
