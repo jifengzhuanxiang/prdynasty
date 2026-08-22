@@ -1,5 +1,6 @@
 /* Native images keep the supplied photography and QR code byte-for-byte. */
 /* eslint-disable @next/next/no-img-element */
+import { MobileNav } from "./mobile-nav";
 import { recruitmentTheme as theme } from "./recruitment-theme";
 
 export default function Home() {
@@ -18,8 +19,10 @@ export default function Home() {
           <a href="#groups">三个分组</a>
           <a href="#benefits">加入收获</a>
           <a href="#stories">真实日常</a>
+          <a href="#faq">常见问题</a>
         </nav>
         <a className="header-cta" href="#join">立即加入</a>
+        <MobileNav />
       </header>
 
       <section className="hero" id="top">
@@ -202,6 +205,7 @@ export default function Home() {
             </div>
             <strong>{theme.recruitment.validity}</strong>
             <span>微信扫码加入</span>
+            <span className="qr-hint">手机端可截图保存本页，在微信中识别二维码加入</span>
           </div>
         </div>
       </section>
@@ -212,6 +216,7 @@ export default function Home() {
         <nav aria-label="页脚导航">
           <a href="#groups">三个分组</a>
           <a href="#stories">真实日常</a>
+          <a href="#faq">常见问题</a>
           <a href="#join">加入我们</a>
         </nav>
         <a className="back-top" href="#top">返回顶部</a>

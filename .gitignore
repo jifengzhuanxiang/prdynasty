@@ -2,6 +2,7 @@
 .DS_Store
 .playwright-cli/
 .superpowers/
+.workbuddy/
 .worktrees/
 docs/
 网页效果预览/

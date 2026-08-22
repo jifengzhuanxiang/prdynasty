@@ -211,12 +211,12 @@ export const recruitmentTheme: RecruitmentTheme = {
     groupName: "26 志联宣传部招新群",
     instruction: "使用微信扫描二维码加入招新群，后续安排以群内通知为准。",
     qr: {
-      src: "/assets/recruitment-qr-2026-08-19.jpg",
+      src: "/assets/recruitment-qr-2026-08-21.jpg",
       alt: "26 志联宣传部招新群微信二维码",
       width: 939,
       height: 1455,
     },
-    validity: "该二维码 8 月 19 日前有效",
+    validity: "该二维码 8 月 28 日前有效",
     fallback: "重新进入页面后若二维码已更新，请以最新页面为准。",
   },
 };
