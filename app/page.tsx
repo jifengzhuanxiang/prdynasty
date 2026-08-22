@@ -2,6 +2,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { MobileNav } from "./mobile-nav";
 import { recruitmentTheme as theme } from "./recruitment-theme";
+import { SpecularSurface } from "./components/specular-surface";
 
 export default function Home() {
   return (
@@ -21,15 +22,15 @@ export default function Home() {
           <a href="#stories">真实日常</a>
           <a href="#faq">常见问题</a>
         </nav>
-        <a className="header-cta" href="#join">立即加入</a>
+        <a className="header-cta" href="#join" data-specular="bright">立即加入</a>
         <MobileNav />
       </header>
 
       <section className="hero" id="top">
         <div className="hero-copy">
           <div className="hero-meta">
-            <span>{theme.meta.status}</span>
-            <span>{theme.meta.season}</span>
+            <span data-specular="bright">{theme.meta.status}</span>
+            <span data-specular="rose">{theme.meta.season}</span>
           </div>
           <p className="eyebrow">{theme.meta.eyebrow}</p>
           <h1 aria-label={`${theme.hero.titleLead}${theme.hero.titleAccent}`}>
@@ -38,18 +39,19 @@ export default function Home() {
           </h1>
           <p className="hero-description">{theme.hero.description}</p>
           <div className="hero-actions">
-            <a className="button button-primary" href={theme.hero.primaryAction.href}>
+            <a className="button button-primary" href={theme.hero.primaryAction.href} data-specular="bright">
               {theme.hero.primaryAction.label}
             </a>
-            <a className="button button-secondary" href={theme.hero.secondaryAction.href}>
+            <a className="button button-secondary" href={theme.hero.secondaryAction.href} data-specular="bright-rose">
               {theme.hero.secondaryAction.label}
             </a>
           </div>
         </div>
 
         <div className="hero-collage" aria-label="宣传部成员与活动照片">
-          <figure className="hero-photo hero-photo-main">
+          <figure className="hero-photo hero-photo-main" data-specular="bright">
             <img
+              data-specular="bright"
               src={theme.hero.images[0].src}
               alt={theme.hero.images[0].alt}
               width={theme.hero.images[0].width}
@@ -59,8 +61,9 @@ export default function Home() {
             />
             <figcaption>有想法，也有一起完成它的人。</figcaption>
           </figure>
-          <figure className="hero-photo hero-photo-note">
+          <figure className="hero-photo hero-photo-note" data-specular="bright">
             <img
+              data-specular="bright"
               src={theme.hero.images[1].src}
               alt={theme.hero.images[1].alt}
               width={theme.hero.images[1].width}
@@ -93,8 +96,8 @@ export default function Home() {
         </div>
         <div className="group-grid">
           {theme.groups.map((group) => (
-            <article className="group-card" key={group.title}>
-              <div className="group-image">
+            <article className="group-card" key={group.title} data-specular="light">
+              <div className="group-image" data-specular="bright">
                 <img
                   src={group.image.src}
                   alt={group.image.alt}
@@ -103,10 +106,10 @@ export default function Home() {
                   loading="lazy"
                   decoding="async"
                 />
-                <span>{group.number}</span>
+                <span data-specular="rose">{group.number}</span>
               </div>
               <div className="group-content">
-                <p className="group-fit">{group.fit}</p>
+                <p className="group-fit" data-specular="rose">{group.fit}</p>
                 <h3>{group.title}</h3>
                 <p className="group-lead">{group.lead}</p>
                 <ul>
@@ -118,7 +121,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="benefits section-pad" id="benefits">
+      <section className="benefits section-pad" id="benefits" data-specular="bright">
         <div className="benefit-intro">
           <p className="section-kicker section-kicker-light">WHAT YOU WILL TAKE WITH YOU · 02</p>
           <h2>你带来兴趣，<br />我们一起把它变成经历。</h2>
@@ -148,7 +151,7 @@ export default function Home() {
         <div className="story-grid">
           {theme.stories.map((story, index) => (
             <article className={`story-card story-card-${index + 1}`} key={story.title}>
-              <div className="story-image">
+              <div className="story-image" data-specular="bright-rose">
                 <img
                   src={story.image.src}
                   alt={story.image.alt}
@@ -175,7 +178,10 @@ export default function Home() {
         <div className="faq-list">
           {theme.faq.map((item, index) => (
             <details key={item.question} open={index === 0}>
-              <summary>{item.question}</summary>
+              <summary>
+                {item.question}
+                <span className="faq-toggle-icon" data-specular="rose" aria-hidden="true">+</span>
+              </summary>
               <p>{item.answer}</p>
             </details>
           ))}
@@ -183,16 +189,16 @@ export default function Home() {
       </section>
 
       <section className="join section-pad" id="join">
-        <div className="join-shell">
+        <div className="join-shell" data-specular="light">
           <div className="join-copy">
             <p className="section-kicker section-kicker-light">JOIN PR · 05</p>
-            <p className="join-status">{theme.meta.status}</p>
+            <p className="join-status" data-specular="rose">{theme.meta.status}</p>
             <h2>{theme.recruitment.title}</h2>
             <h3>{theme.recruitment.groupName}</h3>
             <p>{theme.recruitment.instruction}</p>
             <p className="join-fallback">{theme.recruitment.fallback}</p>
           </div>
-          <div className="qr-card">
+          <div className="qr-card" data-specular="rose">
             <div className="qr-image">
               <img
                 src={theme.recruitment.qr.src}
@@ -221,6 +227,7 @@ export default function Home() {
         </nav>
         <a className="back-top" href="#top">返回顶部</a>
       </footer>
+      <SpecularSurface />
     </main>
   );
 }

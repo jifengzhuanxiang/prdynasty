@@ -18,6 +18,7 @@ export function MobileNav() {
       <button
         type="button"
         className="mobile-nav-toggle"
+        data-specular="rose"
         aria-expanded={open}
         aria-controls="mobile-nav-panel"
         onClick={() => setOpen((value) => !value)}
@@ -30,6 +31,7 @@ export function MobileNav() {
           className="mobile-nav-panel"
           id="mobile-nav-panel"
           aria-label="移动端导航"
+          data-specular="rose"
         >
           {NAV_LINKS.map((link) => (
             <a key={link.href} href={link.href} onClick={() => setOpen(false)}>
@@ -40,6 +42,7 @@ export function MobileNav() {
             className="mobile-nav-cta"
             href="#join"
             onClick={() => setOpen(false)}
+            data-specular="light"
           >
             立即加入
           </a>

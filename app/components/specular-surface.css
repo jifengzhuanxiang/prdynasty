@@ -1,0 +1,43 @@
+.specular-surface {
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.specular-surface canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+[data-specular] {
+  --specular-line: #fffefd;
+}
+
+[data-specular="rose"] {
+  --specular-line: #f45f75;
+}
+
+[data-specular="bright"],
+[data-specular="bright-rose"] {
+  --specular-strength: 1.5;
+  --specular-thickness: 2;
+}
+
+[data-specular="bright"] {
+  --specular-line: #ffffff;
+}
+
+[data-specular="bright-rose"] {
+  --specular-line: #f45f75;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .specular-surface {
+    display: none;
+  }
+}

@@ -577,6 +577,7 @@ summary {
   position: relative;
   aspect-ratio: 4 / 3;
   overflow: hidden;
+  border-radius: 25px 25px 0 0;
 }
 
 .group-image img {
@@ -839,8 +840,7 @@ summary {
   display: none;
 }
 
-.faq-list summary::after {
-  content: "+";
+.faq-toggle-icon {
   position: absolute;
   top: 50%;
   right: 2px;
@@ -864,7 +864,7 @@ summary {
   color: var(--rose-dark);
 }
 
-.faq-list summary:hover::after {
+.faq-list summary:hover .faq-toggle-icon {
   border-color: var(--rose-dark);
 }
 
@@ -872,11 +872,17 @@ summary {
   color: var(--rose-dark);
 }
 
-.faq-list details[open] summary::after {
-  content: "−";
+.faq-list details[open] .faq-toggle-icon {
+  --specular-line: #fffefd;
   background: var(--rose-dark);
   border-color: var(--rose-dark);
   color: var(--white);
+  font-size: 0;
+}
+
+.faq-list details[open] .faq-toggle-icon::before {
+  content: "−";
+  font-size: 18px;
 }
 
 .faq-list details p {

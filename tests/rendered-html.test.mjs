@@ -41,6 +41,11 @@ test("renders the recruitment content contract", async () => {
   }
   assert.match(html, /26 志联宣传部招新群/);
   assert.match(html, /8 月 28 日前有效/);
+  assert.equal(
+    html.match(/data-specular=/g)?.length ?? 0,
+    34,
+    "every initially rendered closed frame should opt into the shared specular layer",
+  );
   assert.doesNotMatch(html, /codex-preview/);
   assert.doesNotMatch(html, /replace-with-your-email/);
 });
