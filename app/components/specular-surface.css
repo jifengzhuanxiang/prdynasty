@@ -23,7 +23,8 @@
 }
 
 [data-specular="bright"],
-[data-specular="bright-rose"] {
+[data-specular="bright-rose"],
+[data-specular="bright-wine"] {
   --specular-strength: 1.5;
   --specular-thickness: 2;
 }
@@ -34,6 +35,10 @@
 
 [data-specular="bright-rose"] {
   --specular-line: #f45f75;
+}
+
+[data-specular="bright-wine"] {
+  --specular-line: #99233e;
 }
 
 @media (prefers-reduced-motion: reduce) {

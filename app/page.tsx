@@ -30,7 +30,7 @@ export default function Home() {
         <div className="hero-copy">
           <div className="hero-meta">
             <span data-specular="bright">{theme.meta.status}</span>
-            <span data-specular="rose">{theme.meta.season}</span>
+            <span data-specular="bright-wine">{theme.meta.season}</span>
           </div>
           <p className="eyebrow">{theme.meta.eyebrow}</p>
           <h1 aria-label={`${theme.hero.titleLead}${theme.hero.titleAccent}`}>
@@ -49,7 +49,7 @@ export default function Home() {
         </div>
 
         <div className="hero-collage" aria-label="宣传部成员与活动照片">
-          <figure className="hero-photo hero-photo-main" data-specular="bright">
+          <figure className="hero-photo hero-photo-main" data-specular="bright-wine">
             <img
               data-specular="bright"
               src={theme.hero.images[0].src}
@@ -61,9 +61,9 @@ export default function Home() {
             />
             <figcaption>有想法，也有一起完成它的人。</figcaption>
           </figure>
-          <figure className="hero-photo hero-photo-note" data-specular="bright">
+          <figure className="hero-photo hero-photo-note" data-specular="bright-wine">
             <img
-              data-specular="bright"
+              data-specular="bright-rose"
               src={theme.hero.images[1].src}
               alt={theme.hero.images[1].alt}
               width={theme.hero.images[1].width}
@@ -96,8 +96,8 @@ export default function Home() {
         </div>
         <div className="group-grid">
           {theme.groups.map((group) => (
-            <article className="group-card" key={group.title} data-specular="light">
-              <div className="group-image" data-specular="bright">
+            <article className="group-card" key={group.title} data-specular="bright-wine">
+              <div className="group-image" data-specular="bright-rose">
                 <img
                   src={group.image.src}
                   alt={group.image.alt}
@@ -106,10 +106,10 @@ export default function Home() {
                   loading="lazy"
                   decoding="async"
                 />
-                <span data-specular="rose">{group.number}</span>
+                <span data-specular="bright-wine">{group.number}</span>
               </div>
               <div className="group-content">
-                <p className="group-fit" data-specular="rose">{group.fit}</p>
+                <p className="group-fit" data-specular="bright-wine">{group.fit}</p>
                 <h3>{group.title}</h3>
                 <p className="group-lead">{group.lead}</p>
                 <ul>
@@ -180,7 +180,7 @@ export default function Home() {
             <details key={item.question} open={index === 0}>
               <summary>
                 {item.question}
-                <span className="faq-toggle-icon" data-specular="rose" aria-hidden="true">+</span>
+                <span className="faq-toggle-icon" data-specular="bright-wine" aria-hidden="true">+</span>
               </summary>
               <p>{item.answer}</p>
             </details>
@@ -189,16 +189,16 @@ export default function Home() {
       </section>
 
       <section className="join section-pad" id="join">
-        <div className="join-shell" data-specular="light">
+        <div className="join-shell" data-specular="bright">
           <div className="join-copy">
             <p className="section-kicker section-kicker-light">JOIN PR · 05</p>
-            <p className="join-status" data-specular="rose">{theme.meta.status}</p>
+            <p className="join-status" data-specular="bright-wine">{theme.meta.status}</p>
             <h2>{theme.recruitment.title}</h2>
             <h3>{theme.recruitment.groupName}</h3>
             <p>{theme.recruitment.instruction}</p>
             <p className="join-fallback">{theme.recruitment.fallback}</p>
           </div>
-          <div className="qr-card" data-specular="rose">
+          <div className="qr-card" data-specular="bright-wine">
             <div className="qr-image">
               <img
                 src={theme.recruitment.qr.src}

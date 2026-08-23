@@ -874,6 +874,8 @@ summary {
 
 .faq-list details[open] .faq-toggle-icon {
   --specular-line: #fffefd;
+  --specular-strength: 1.5;
+  --specular-thickness: 2;
   background: var(--rose-dark);
   border-color: var(--rose-dark);
   color: var(--white);

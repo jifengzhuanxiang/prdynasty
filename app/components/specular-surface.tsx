@@ -10,6 +10,11 @@ import {
   resolveSpecularTuning,
   transformScreenOffsetToLocal,
 } from "./specular-geometry";
+import {
+  advanceSpecularMotion,
+  createSpecularMotionState,
+  type SpecularMotionState,
+} from "./specular-motion";
 import "./specular-surface.css";
 
 const TARGET_SELECTOR = "[data-specular]";
@@ -105,13 +110,6 @@ void main() {
 }
 `;
 
-type TargetState = {
-  angle: number;
-  brightness: number;
-  centerX: number;
-  centerY: number;
-};
-
 type TargetGeometry = {
   centerX: number;
   centerY: number;
@@ -188,10 +186,6 @@ function easedProximity(distance: number) {
   return t * t * (3 - 2 * t);
 }
 
-function shortestAngleDifference(target: number, current: number) {
-  return ((target - current + Math.PI * 3) % (Math.PI * 2)) - Math.PI;
-}
-
 export function SpecularSurface() {
   const hostRef = useRef<HTMLDivElement>(null);
 
@@ -216,7 +210,7 @@ export function SpecularSurface() {
         antialias: true,
         autoClear: false,
         depth: false,
-        dpr: window.devicePixelRatio || 1,
+        dpr: Math.min(window.devicePixelRatio || 1, 2),
         premultipliedAlpha: true,
         powerPreference: "low-power",
         webgl: 2,
@@ -268,11 +262,12 @@ export function SpecularSurface() {
     host.dataset.specularStatus = "ready";
 
     let targets: HTMLElement[] = [];
+    const visibleTargets = new Set<HTMLElement>();
     let pointer: { x: number; y: number } | null = null;
     let focusedTarget: HTMLElement | null = null;
     let animationFrame = 0;
     let lastTime = performance.now();
-    const targetStates = new Map<HTMLElement, TargetState>();
+    const targetStates = new Map<HTMLElement, SpecularMotionState>();
 
     const setRendererSize = () => {
       if (renderer.width !== window.innerWidth || renderer.height !== window.innerHeight) {
@@ -287,10 +282,43 @@ export function SpecularSurface() {
         ? null
         : new ResizeObserver(() => schedule());
 
+    const intersectionObserver =
+      typeof IntersectionObserver === "undefined"
+        ? null
+        : new IntersectionObserver(
+            (entries) => {
+              for (const entry of entries) {
+                const target = entry.target as HTMLElement;
+                if (entry.isIntersecting) visibleTargets.add(target);
+                else visibleTargets.delete(target);
+              }
+              schedule();
+            },
+            { rootMargin: `${PAD}px` },
+          );
+
     const refreshTargets = () => {
       targets = Array.from(document.querySelectorAll<HTMLElement>(TARGET_SELECTOR));
       resizeObserver?.disconnect();
-      targets.forEach((target) => resizeObserver?.observe(target));
+      intersectionObserver?.disconnect();
+      visibleTargets.clear();
+      targets.forEach((target) => {
+        resizeObserver?.observe(target);
+        if (intersectionObserver) {
+          intersectionObserver.observe(target);
+          const rect = target.getBoundingClientRect();
+          if (
+            rect.bottom >= -PAD &&
+            rect.top <= window.innerHeight + PAD &&
+            rect.right >= -PAD &&
+            rect.left <= window.innerWidth + PAD
+          ) {
+            visibleTargets.add(target);
+          }
+        } else {
+          visibleTargets.add(target);
+        }
+      });
       for (const target of targetStates.keys()) {
         if (!targets.includes(target)) targetStates.delete(target);
       }
@@ -300,16 +328,17 @@ export function SpecularSurface() {
 
     const render = (now: number) => {
       animationFrame = 0;
+      if (document.visibilityState === "hidden") return;
       setRendererSize();
       const dt = Math.min((now - lastTime) / 1000, 0.05);
       lastTime = now;
-      let needsAnotherFrame = false;
 
       renderer.disable(gl.SCISSOR_TEST);
       gl.clear(gl.COLOR_BUFFER_BIT);
       renderer.enable(gl.SCISSOR_TEST);
 
-      for (const target of targets) {
+      for (const [targetIndex, target] of targets.entries()) {
+        if (!visibleTargets.has(target)) continue;
         const targetGeometry = geometryFor(target);
         if (!targetGeometry) continue;
 
@@ -322,63 +351,31 @@ export function SpecularSurface() {
 
         let state = targetStates.get(target);
         if (!state) {
-          state = {
-            angle: 2.4,
-            brightness: 0,
-            centerX: targetGeometry.centerX,
-            centerY: targetGeometry.centerY,
-          };
+          state = createSpecularMotionState(2.4 + targetIndex * 2.3999632297);
           targetStates.set(target, state);
         }
 
-        let targetBrightness = target === focusedTarget ? 0.78 : 0;
-        let targetAngle = state.angle;
+        let proximity = target === focusedTarget ? 0.78 : 0;
+        let targetAngle: number | undefined;
         if (pointer) {
           const distance = pointerDistance(
             targetGeometry.rect,
             pointer.x,
             pointer.y,
           );
-          targetBrightness = Math.max(targetBrightness, easedProximity(distance));
+          proximity = Math.max(proximity, easedProximity(distance));
           const localPointer = transformScreenOffsetToLocal(
             targetGeometry.inverse,
             pointer.x - targetGeometry.centerX,
             pointer.y - targetGeometry.centerY,
           );
-          if (distance === 0) {
-            const nx = localPointer.x / Math.max(targetGeometry.halfWidth, 1);
-            const ny = localPointer.y / Math.max(targetGeometry.halfHeight, 1);
-            targetAngle =
-              Math.atan2(2 / targetGeometry.halfHeight, -2 / targetGeometry.halfWidth) +
-              nx * 0.3 -
-              ny * 0.15;
-          } else {
+          if (Math.hypot(localPointer.x, localPointer.y) > 4) {
             targetAngle = Math.atan2(localPointer.y, localPointer.x);
           }
         }
 
-        const angleDifference = shortestAngleDifference(targetAngle, state.angle);
-        const brightnessDifference = targetBrightness - state.brightness;
-        state.angle += angleDifference * (1 - Math.exp(-dt * 7));
-        state.brightness += brightnessDifference * (1 - Math.exp(-dt * 8));
-
-        const geometryMoved =
-          Math.abs(state.centerX - targetGeometry.centerX) > 0.1 ||
-          Math.abs(state.centerY - targetGeometry.centerY) > 0.1;
-        state.centerX = targetGeometry.centerX;
-        state.centerY = targetGeometry.centerY;
-        if (
-          geometryMoved ||
-          Math.abs(angleDifference) > 0.002 ||
-          Math.abs(brightnessDifference) > 0.002
-        ) {
-          needsAnotherFrame = true;
-        }
-
-        if (state.brightness < 0.002) {
-          state.brightness = 0;
-          continue;
-        }
+        state = advanceSpecularMotion(state, { dt, proximity, targetAngle });
+        targetStates.set(target, state);
 
         const dpr = renderer.dpr;
         const left = Math.max(
@@ -425,21 +422,21 @@ export function SpecularSurface() {
       }
 
       renderer.disable(gl.SCISSOR_TEST);
-      if (needsAnotherFrame) schedule();
+      schedule();
     };
 
     function schedule() {
-      if (!animationFrame) animationFrame = requestAnimationFrame(render);
+      if (document.visibilityState !== "hidden" && !animationFrame) {
+        animationFrame = requestAnimationFrame(render);
+      }
     }
 
     const onPointerMove = (event: PointerEvent) => {
       if (event.pointerType === "touch") return;
       pointer = { x: event.clientX, y: event.clientY };
-      schedule();
     };
     const clearPointer = () => {
       pointer = null;
-      schedule();
     };
     const onPointerOut = (event: PointerEvent) => {
       if (!event.relatedTarget) clearPointer();
@@ -449,23 +446,26 @@ export function SpecularSurface() {
         event.target instanceof Element
           ? event.target.closest<HTMLElement>(TARGET_SELECTOR)
           : null;
-      schedule();
     };
     const onFocusOut = () => {
       focusedTarget = null;
+    };
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "hidden") {
+        if (animationFrame) cancelAnimationFrame(animationFrame);
+        animationFrame = 0;
+        return;
+      }
+      lastTime = performance.now();
       schedule();
     };
-    const onViewportMotion = () => schedule();
 
     window.addEventListener("pointermove", onPointerMove, { passive: true });
     window.addEventListener("pointerout", onPointerOut, { passive: true });
     window.addEventListener("blur", clearPointer);
-    window.addEventListener("resize", onViewportMotion, { passive: true });
-    window.addEventListener("scroll", onViewportMotion, { passive: true });
-    window.addEventListener("wheel", onViewportMotion, { passive: true });
-    window.addEventListener("keydown", onViewportMotion);
     document.addEventListener("focusin", onFocusIn);
     document.addEventListener("focusout", onFocusOut);
+    document.addEventListener("visibilitychange", onVisibilityChange);
     const mutationObserver =
       typeof MutationObserver === "undefined"
         ? null
@@ -484,15 +484,13 @@ export function SpecularSurface() {
       if (animationFrame) cancelAnimationFrame(animationFrame);
       mutationObserver?.disconnect();
       resizeObserver?.disconnect();
+      intersectionObserver?.disconnect();
       window.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("pointerout", onPointerOut);
       window.removeEventListener("blur", clearPointer);
-      window.removeEventListener("resize", onViewportMotion);
-      window.removeEventListener("scroll", onViewportMotion);
-      window.removeEventListener("wheel", onViewportMotion);
-      window.removeEventListener("keydown", onViewportMotion);
       document.removeEventListener("focusin", onFocusIn);
       document.removeEventListener("focusout", onFocusOut);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
       if (gl.canvas.parentNode === host) host.removeChild(gl.canvas);
       gl.getExtension("WEBGL_lose_context")?.loseContext();
     };
