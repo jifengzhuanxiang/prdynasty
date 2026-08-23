@@ -46,6 +46,39 @@ test("renders the recruitment content contract", async () => {
     34,
     "every initially rendered closed frame should opt into the shared specular layer",
   );
+
+  const revealUnits = [
+    "strip",
+    "groups-heading",
+    "groups-cards",
+    "benefits-intro",
+    "benefits-list",
+    "stories-heading",
+    "stories-cards",
+    "faq-intro",
+    "faq-list",
+    "join-copy",
+    "join-qr",
+    "footer",
+  ];
+  for (const unit of revealUnits) {
+    assert.match(html, new RegExp(`data-reveal=["']${unit}["']`));
+  }
+  assert.equal(
+    (html.match(/\sdata-reveal=["']/g) ?? []).length,
+    12,
+    "the page should expose exactly twelve container-level reveal units",
+  );
+  assert.equal(
+    (html.match(/data-reveal-delay=["']140["']/g) ?? []).length,
+    5,
+    "the five second-layer containers should share the same delay",
+  );
+  assert.doesNotMatch(
+    html,
+    /class=["'][^"']*\bgroup-card\b[^"']*["'][^>]*\sdata-reveal=/,
+    "group cards should reveal together through their shared container",
+  );
   assert.doesNotMatch(html, /codex-preview/);
   assert.doesNotMatch(html, /replace-with-your-email/);
 });

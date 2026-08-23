@@ -3,10 +3,12 @@
 import { MobileNav } from "./mobile-nav";
 import { recruitmentTheme as theme } from "./recruitment-theme";
 import { SpecularSurface } from "./components/specular-surface";
+import ScrollReveal from "./scroll-reveal";
 
 export default function Home() {
   return (
     <main>
+      <ScrollReveal />
       <header className="site-header">
         <a className="brand" href="#top" aria-label="深大志联宣传部招新首页">
           <span className="brand-mark">PR</span>
@@ -76,7 +78,7 @@ export default function Home() {
         </div>
       </section>
 
-      <div className="recruitment-strip" aria-label="宣传部工作方向">
+      <div className="recruitment-strip" aria-label="宣传部工作方向" data-reveal="strip">
         <span>摄影 PHOTO</span>
         <span>平面设计 DESIGN</span>
         <span>公众号 CONTENT</span>
@@ -84,7 +86,7 @@ export default function Home() {
       </div>
 
       <section className="groups section-pad" id="groups">
-        <div className="section-heading">
+        <div className="section-heading" data-reveal="groups-heading">
           <div>
             <p className="section-kicker">CHOOSE YOUR WAY · 01</p>
             <h2>三种方向，<br />一种认真表达的心。</h2>
@@ -94,7 +96,7 @@ export default function Home() {
             在真实任务里慢慢找到自己的节奏。
           </p>
         </div>
-        <div className="group-grid">
+        <div className="group-grid" data-reveal="groups-cards" data-reveal-delay="140">
           {theme.groups.map((group) => (
             <article className="group-card" key={group.title} data-specular="bright-wine">
               <div className="group-image" data-specular="bright-rose">
@@ -122,12 +124,12 @@ export default function Home() {
       </section>
 
       <section className="benefits section-pad" id="benefits" data-specular="bright">
-        <div className="benefit-intro">
+        <div className="benefit-intro" data-reveal="benefits-intro">
           <p className="section-kicker section-kicker-light">WHAT YOU WILL TAKE WITH YOU · 02</p>
           <h2>你带来兴趣，<br />我们一起把它变成经历。</h2>
           <p>不是一份空泛的“部门体验”，而是可以被看见、被记住，也能继续带走的大学片段。</p>
         </div>
-        <ol className="benefit-list">
+        <ol className="benefit-list" data-reveal="benefits-list" data-reveal-delay="140">
           {theme.benefits.map((benefit) => (
             <li key={benefit.number}>
               <span>{benefit.number}</span>
@@ -141,14 +143,14 @@ export default function Home() {
       </section>
 
       <section className="stories section-pad" id="stories">
-        <div className="section-heading stories-heading">
+        <div className="section-heading stories-heading" data-reveal="stories-heading">
           <div>
             <p className="section-kicker">REAL DAYS, REAL PEOPLE · 03</p>
             <h2>不只一起做事，<br />也一起认真生活。</h2>
           </div>
           <p>真实的作品、活动和合照，比任何口号都更能说明 PR 是什么样的地方。</p>
         </div>
-        <div className="story-grid">
+        <div className="story-grid" data-reveal="stories-cards" data-reveal-delay="140">
           {theme.stories.map((story, index) => (
             <article className={`story-card story-card-${index + 1}`} key={story.title}>
               <div className="story-image" data-specular="bright-rose">
@@ -170,12 +172,12 @@ export default function Home() {
       </section>
 
       <section className="faq section-pad" id="faq">
-        <div className="faq-intro">
+        <div className="faq-intro" data-reveal="faq-intro">
           <p className="section-kicker">BEFORE YOU ASK · 04</p>
           <h2>你不必一开始<br />就很会。</h2>
           <p>愿意观察、愿意动手、愿意和别人一起完成一件事，已经是很好的开始。</p>
         </div>
-        <div className="faq-list">
+        <div className="faq-list" data-reveal="faq-list" data-reveal-delay="140">
           {theme.faq.map((item, index) => (
             <details key={item.question} open={index === 0}>
               <summary>
@@ -190,7 +192,7 @@ export default function Home() {
 
       <section className="join section-pad" id="join">
         <div className="join-shell" data-specular="bright">
-          <div className="join-copy">
+          <div className="join-copy" data-reveal="join-copy">
             <p className="section-kicker section-kicker-light">JOIN PR · 05</p>
             <p className="join-status" data-specular="bright-wine">{theme.meta.status}</p>
             <h2>{theme.recruitment.title}</h2>
@@ -198,7 +200,7 @@ export default function Home() {
             <p>{theme.recruitment.instruction}</p>
             <p className="join-fallback">{theme.recruitment.fallback}</p>
           </div>
-          <div className="qr-card" data-specular="bright-wine">
+          <div className="qr-card" data-specular="bright-wine" data-reveal="join-qr" data-reveal-delay="140">
             <div className="qr-image">
               <img
                 src={theme.recruitment.qr.src}
@@ -216,7 +218,7 @@ export default function Home() {
         </div>
       </section>
 
-      <footer>
+      <footer data-reveal="footer">
         <a className="footer-brand" href="#top"><span>PR</span> 深大志联宣传部</a>
         <p>深圳大学志愿者联合会 · 宣传部</p>
         <nav aria-label="页脚导航">
