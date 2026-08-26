@@ -40,7 +40,7 @@ test("renders the recruitment content contract", async () => {
     assert.match(html, new RegExp(group));
   }
   assert.match(html, /26 志联宣传部招新群/);
-  assert.match(html, /8 月 28 日前有效/);
+  assert.match(html, /9 月 2 日前有效/);
   assert.equal(
     html.match(/data-specular=/g)?.length ?? 0,
     34,
@@ -81,4 +81,43 @@ test("renders the recruitment content contract", async () => {
   );
   assert.doesNotMatch(html, /codex-preview/);
   assert.doesNotMatch(html, /replace-with-your-email/);
+});
+
+test("renders the recruitment directions as one accessible looping ribbon", async () => {
+  const html = await renderHome();
+
+  assert.match(
+    html,
+    /aria-label=["']摄影PHOTO 平面设计DESIGN 公众号CONTENT["']/,
+  );
+  assert.match(html, /class=["'][^"']*text-loop-svg[^"']*["']/);
+  assert.match(html, /摄影PHOTO 平面设计DESIGN 公众号CONTENT/);
+  assert.doesNotMatch(html, /<span>摄影 PHOTO<\/span>/);
+  assert.equal(
+    (html.match(/data-reveal=["']strip["']/g) ?? []).length,
+    1,
+    "the ribbon should remain one container-level reveal unit",
+  );
+});
+
+test("renders the hero title as two accessible split-text lines", async () => {
+  const html = await renderHome();
+
+  assert.match(
+    html,
+    /<h1 aria-label=["']把你的灵感，做成校园里真正发生的作品。["']>/,
+  );
+  assert.equal(
+    (html.match(/class=["'][^"']*\bsplit-parent\b[^"']*\bhero-title-line\b[^"']*["']/g) ?? [])
+      .length,
+    2,
+  );
+  assert.match(
+    html,
+    /hero-title-lead[^>]*>把你的灵<span class=["']split-text-no-wrap["']>感，<\/span>/,
+  );
+  assert.match(
+    html,
+    /hero-title-accent[^>]*>做成校园里真正发生的作<span class=["']split-text-no-wrap["']>品。<\/span>/,
+  );
 });

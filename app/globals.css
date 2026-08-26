@@ -350,12 +350,12 @@ summary {
   line-height: 1.12;
 }
 
-.hero h1 span,
-.hero h1 strong {
+.hero h1 > span,
+.hero h1 > strong {
   display: block;
 }
 
-.hero h1 strong {
+.hero h1 > strong {
   margin-top: 8px;
   color: var(--rose);
   font-weight: 700;
@@ -439,16 +439,19 @@ summary {
 
 .hero-photo-main {
   position: absolute;
-  inset: 22px 52px 76px 18px;
+  inset: 22px 52px auto 18px;
   padding: 13px;
-  border-radius: 48% 48% 28px 28px;
+  border-radius: 28px;
   background: var(--blush-strong);
   transform: rotate(-1.5deg);
 }
 
 .hero-photo-main img {
-  border-radius: 48% 48% 18px 18px;
-  object-position: center 45%;
+  height: auto;
+  aspect-ratio: 1800 / 1302;
+  border-radius: 18px;
+  object-fit: contain;
+  object-position: center;
 }
 
 .hero-photo-main figcaption {
@@ -474,28 +477,24 @@ summary {
 }
 
 .recruitment-strip {
-  min-height: 64px;
-  padding: 0 var(--page-pad);
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  align-items: stretch;
-  background: var(--rose-dark);
+  min-height: clamp(78px, 8vw, 112px);
+  padding: 0;
+  background: #df7fae;
   color: var(--white);
+  overflow: hidden;
 }
 
-.recruitment-strip span {
-  display: grid;
-  place-items: center;
-  padding: 14px 22px;
-  border-right: 1px solid rgba(255, 255, 255, 0.25);
-  text-align: center;
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
+.recruitment-text-loop {
+  height: clamp(78px, 8vw, 112px);
 }
 
-.recruitment-strip span:last-child {
-  border-right: 0;
+.recruitment-text-loop .text-loop-svg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: max(100%, 960px);
+  max-width: none;
+  transform: translate(-50%, -50%);
 }
 
 .section-pad {
@@ -1215,18 +1214,6 @@ footer nav a:hover {
     justify-self: center;
   }
 
-  .recruitment-strip {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .recruitment-strip span:nth-child(2) {
-    border-right: 0;
-  }
-
-  .recruitment-strip span:nth-child(-n + 2) {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
-  }
-
   .section-pad {
     padding-top: 94px;
     padding-bottom: 94px;
@@ -1338,11 +1325,11 @@ footer nav a:hover {
   }
 
   .hero-collage {
-    min-height: 430px;
+    min-height: 360px;
   }
 
   .hero-photo-main {
-    inset: 12px 30px 58px 0;
+    inset: 12px 30px auto 0;
     padding: 9px;
   }
 
@@ -1359,11 +1346,6 @@ footer nav a:hover {
 
   .hero-photo-note figcaption {
     display: none;
-  }
-
-  .recruitment-strip span {
-    padding: 12px 8px;
-    font-size: 12px;
   }
 
   .section-pad {

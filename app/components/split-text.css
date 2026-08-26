@@ -1,0 +1,22 @@
+.split-parent .split-char,
+.split-parent .split-word {
+  display: inline-block;
+}
+
+.split-parent .split-line {
+  display: block;
+}
+
+.hero-title-line {
+  width: 100%;
+  display: block !important;
+}
+
+.hero-title-line > span:not(.split-text-no-wrap) {
+  white-space: normal !important;
+}
+
+.split-text-no-wrap {
+  display: inline-block;
+  white-space: nowrap;
+}

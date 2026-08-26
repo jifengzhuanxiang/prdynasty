@@ -3,6 +3,8 @@
 import { MobileNav } from "./mobile-nav";
 import { recruitmentTheme as theme } from "./recruitment-theme";
 import { SpecularSurface } from "./components/specular-surface";
+import SplitText from "./components/split-text";
+import TextLoop from "./components/text-loop";
 import ScrollReveal from "./scroll-reveal";
 
 export default function Home() {
@@ -36,8 +38,36 @@ export default function Home() {
           </div>
           <p className="eyebrow">{theme.meta.eyebrow}</p>
           <h1 aria-label={`${theme.hero.titleLead}${theme.hero.titleAccent}`}>
-            <span>{theme.hero.titleLead}</span>
-            <strong>{theme.hero.titleAccent}</strong>
+            <SplitText
+              tag="span"
+              text={theme.hero.titleLead}
+              className="hero-title-line hero-title-lead"
+              delay={55}
+              duration={0.65}
+              ease="power3.out"
+              splitType="chars"
+              from={{ opacity: 0, y: 40 }}
+              to={{ opacity: 1, y: 0 }}
+              threshold={0.1}
+              rootMargin="0px"
+              textAlign="left"
+              keepLastCharsTogether={2}
+            />
+            <SplitText
+              tag="strong"
+              text={theme.hero.titleAccent}
+              className="hero-title-line hero-title-accent"
+              delay={55}
+              duration={0.65}
+              ease="power3.out"
+              splitType="chars"
+              from={{ opacity: 0, y: 40 }}
+              to={{ opacity: 1, y: 0 }}
+              threshold={0.1}
+              rootMargin="0px"
+              textAlign="left"
+              keepLastCharsTogether={2}
+            />
           </h1>
           <p className="hero-description">{theme.hero.description}</p>
           <div className="hero-actions">
@@ -79,10 +109,24 @@ export default function Home() {
       </section>
 
       <div className="recruitment-strip" aria-label="宣传部工作方向" data-reveal="strip">
-        <span>摄影 PHOTO</span>
-        <span>平面设计 DESIGN</span>
-        <span>公众号 CONTENT</span>
-        <span>一起把灵感做成作品</span>
+        <TextLoop
+          text="摄影PHOTO 平面设计DESIGN 公众号CONTENT"
+          shape="line"
+          speed={80}
+          direction="forward"
+          separator="✦"
+          curviness={84}
+          fontSize={40}
+          fontWeight={550}
+          letterSpacing={9.5}
+          uppercase
+          color="#ffffff"
+          ribbon
+          ribbonColor="#df7fae"
+          ribbonWidth={108}
+          pauseOnHover
+          className="recruitment-text-loop"
+        />
       </div>
 
       <section className="groups section-pad" id="groups">
