@@ -121,3 +121,24 @@ test("renders the hero title as two accessible split-text lines", async () => {
     /hero-title-accent[^>]*>做成校园里真正发生的作<span class=["']split-text-no-wrap["']>品。<\/span>/,
   );
 });
+
+test("renders the page through the responsive site-scale surface", async () => {
+  const html = await renderHome();
+
+  assert.match(
+    html,
+    /<main class=["']site-scale["']>/,
+    "the page surface should use the responsive desktop and mobile scale contract",
+  );
+  assert.doesNotMatch(html, /<main style=["'][^"']*zoom:/);
+});
+
+test("keeps the viewport-fixed specular layer outside the scaled page surface", async () => {
+  const html = await renderHome();
+
+  assert.match(
+    html,
+    /<\/main><div class=["']specular-surface["'][^>]*><\/div>/,
+    "the fixed WebGL surface should use viewport coordinates instead of inheriting the page zoom",
+  );
+});

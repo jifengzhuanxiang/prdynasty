@@ -17,6 +17,8 @@
   --display: "Songti SC", "STSong", "Noto Serif CJK SC", Georgia, serif;
   --sans: "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
   --page-pad: max(24px, calc((100vw - 1280px) / 2));
+  --site-scale: 0.9;
+  --hero-title-scale: 0.8333333333;
 }
 
 * {
@@ -61,6 +63,10 @@ summary {
 ::selection {
   background: var(--rose-dark);
   color: var(--white);
+}
+
+.site-scale {
+  zoom: var(--site-scale);
 }
 
 .sr-only {
@@ -348,6 +354,7 @@ summary {
   font-weight: 500;
   letter-spacing: -0.03em;
   line-height: 1.12;
+  zoom: var(--hero-title-scale);
 }
 
 .hero h1 > span,
@@ -1094,6 +1101,11 @@ footer nav a:hover {
 }
 
 @media (max-width: 1080px) {
+  :root {
+    --site-scale: 0.9;
+    --hero-title-scale: 0.8333333333;
+  }
+
   .desktop-nav {
     display: none;
   }

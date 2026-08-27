@@ -6,7 +6,7 @@ import { Color, Mesh, Program, Renderer, Triangle } from "ogl";
 import {
   invertLinearTransform,
   parseCssTransform,
-  resolveBorderRadii,
+  resolveScaledFrameGeometry,
   resolveSpecularTuning,
   transformScreenOffsetToLocal,
 } from "./specular-geometry";
@@ -144,7 +144,7 @@ function geometryFor(target: HTMLElement): TargetGeometry | null {
   const width = numericCssSize(styles.width, target.offsetWidth || rect.width);
   const height = numericCssSize(styles.height, target.offsetHeight || rect.height);
   const inverse = invertLinearTransform(parseCssTransform(styles.transform));
-  const radii = resolveBorderRadii(
+  const frame = resolveScaledFrameGeometry(
     {
       topLeft: styles.borderTopLeftRadius,
       topRight: styles.borderTopRightRadius,
@@ -153,6 +153,7 @@ function geometryFor(target: HTMLElement): TargetGeometry | null {
     },
     width,
     height,
+    styles.getPropertyValue("--site-scale"),
   );
   const tuning = resolveSpecularTuning(
     styles.getPropertyValue("--specular-thickness"),
@@ -162,11 +163,11 @@ function geometryFor(target: HTMLElement): TargetGeometry | null {
   return {
     centerX: rect.left + rect.width / 2,
     centerY: rect.top + rect.height / 2,
-    halfWidth: width / 2,
-    halfHeight: height / 2,
+    halfWidth: frame.halfWidth,
+    halfHeight: frame.halfHeight,
     inverse,
-    radiiX: radii.x,
-    radiiY: radii.y,
+    radiiX: frame.radiiX,
+    radiiY: frame.radiiY,
     lineColor:
       styles.getPropertyValue("--specular-line").trim() || "#fffefd",
     strength: tuning.strength,

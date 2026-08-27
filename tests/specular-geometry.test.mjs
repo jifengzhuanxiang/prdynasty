@@ -7,6 +7,7 @@ const {
   invertLinearTransform,
   parseCssTransform,
   resolveBorderRadii,
+  resolveScaledFrameGeometry,
   transformScreenOffsetToLocal,
 } = geometry;
 
@@ -40,6 +41,48 @@ test("resolves percentage and pixel corner radii independently", () => {
 
   assert.deepEqual(radii.x, [260.112, 260.112, 28, 28]);
   assert.deepEqual(radii.y, [271.488, 271.488, 28, 28]);
+});
+
+test("scales frame dimensions and corner radii into viewport coordinates", () => {
+  const frame = resolveScaledFrameGeometry(
+    {
+      topLeft: "999px",
+      topRight: "999px",
+      bottomRight: "999px",
+      bottomLeft: "999px",
+    },
+    148,
+    52,
+    "0.8",
+  );
+
+  assert.deepEqual(frame, {
+    halfWidth: 59.2,
+    halfHeight: 20.8,
+    radiiX: [20.8, 20.8, 20.8, 20.8],
+    radiiY: [20.8, 20.8, 20.8, 20.8],
+  });
+});
+
+test("falls back to unscaled frame geometry when the layout scale is invalid", () => {
+  const frame = resolveScaledFrameGeometry(
+    {
+      topLeft: "12px",
+      topRight: "12px",
+      bottomRight: "12px",
+      bottomLeft: "12px",
+    },
+    100,
+    40,
+    "missing",
+  );
+
+  assert.deepEqual(frame, {
+    halfWidth: 50,
+    halfHeight: 20,
+    radiiX: [12, 12, 12, 12],
+    radiiY: [12, 12, 12, 12],
+  });
 });
 
 test("maps screen offsets back into a rotated frame's local coordinates", () => {

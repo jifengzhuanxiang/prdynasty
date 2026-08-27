@@ -149,3 +149,20 @@ export function resolveBorderRadii(
     ),
   };
 }
+
+export function resolveScaledFrameGeometry(
+  corners: CssCornerRadii,
+  width: number,
+  height: number,
+  scaleValue: string,
+) {
+  const scale = positiveNumber(scaleValue, 1);
+  const radii = resolveBorderRadii(corners, width, height);
+
+  return {
+    halfWidth: rounded((width * scale) / 2),
+    halfHeight: rounded((height * scale) / 2),
+    radiiX: radii.x.map((value) => rounded(value * scale)),
+    radiiY: radii.y.map((value) => rounded(value * scale)),
+  };
+}

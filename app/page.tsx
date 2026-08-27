@@ -9,9 +9,10 @@ import ScrollReveal from "./scroll-reveal";
 
 export default function Home() {
   return (
-    <main>
-      <ScrollReveal />
-      <header className="site-header">
+    <>
+      <main className="site-scale">
+        <ScrollReveal />
+        <header className="site-header">
         <a className="brand" href="#top" aria-label="深大志联宣传部招新首页">
           <span className="brand-mark">PR</span>
           <span className="brand-copy">
@@ -272,8 +273,9 @@ export default function Home() {
           <a href="#join">加入我们</a>
         </nav>
         <a className="back-top" href="#top">返回顶部</a>
-      </footer>
+        </footer>
+      </main>
       <SpecularSurface />
-    </main>
+    </>
   );
 }

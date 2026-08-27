@@ -1,0 +1,28 @@
+0 verbose cli /Users/jaydenchan/.workbuddy/binaries/node/versions/22.22.2/bin/node /Users/jaydenchan/.workbuddy/binaries/node/versions/22.22.2/bin/npm
+1 info using npm@10.9.7
+2 info using node@v22.22.2
+3 silly config load:file:/Users/jaydenchan/.workbuddy/binaries/node/versions/22.22.2/lib/node_modules/npm/npmrc
+4 silly config load:file:/Users/jaydenchan/codex/PR网站/.npmrc
+5 silly config load:file:/Users/jaydenchan/.npmrc
+6 silly config load:file:/Users/jaydenchan/.workbuddy/binaries/node/versions/22.22.2/etc/npmrc
+7 verbose title npm init
+8 verbose argv "init" "--yes"
+9 verbose logfile logs-max:10 dir:/Users/jaydenchan/codex/PR网站/pr-video/.sites-runtime/npm-cache/_logs/2026-08-24T04_12_59_401Z-
+10 verbose logfile /Users/jaydenchan/codex/PR网站/pr-video/.sites-runtime/npm-cache/_logs/2026-08-24T04_12_59_401Z-debug-0.log
+11 silly logfile done cleaning log files
+12 silly package data {
+12 silly package data   name: 'pr-video',
+12 silly package data   version: '1.0.0',
+12 silly package data   description: '',
+12 silly package data   main: 'index.js',
+12 silly package data   scripts: { test: 'echo "Error: no test specified" && exit 1' },
+12 silly package data   keywords: [],
+12 silly package data   author: '',
+12 silly package data   license: 'ISC'
+12 silly package data }
+13 verbose cwd /Users/jaydenchan/codex/PR网站/pr-video
+14 verbose os Darwin 25.6.0
+15 verbose node v22.22.2
+16 verbose npm  v10.9.7
+17 verbose exit 0
+18 info ok
